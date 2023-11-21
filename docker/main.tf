@@ -45,3 +45,10 @@ resource "docker_container" "web" {
 resource "docker_image" "coffee" {
   name = "lalyos/12factor"
 }
+
+output "port" {
+    value = docker_container.web.ports[0].external
+}
+output "url" {
+  value = "http://localhost:${var.port}"
+}
