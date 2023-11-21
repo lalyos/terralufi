@@ -41,3 +41,17 @@ port=8000
 title="Lunchbreak soon ...."
 color="hotpink"
 ```
+
+## escaping vars with here-doc
+```
+body=<<KRUMPLI
+<iframe src="https://giphy.com/embed/FR61sPFtyp5MnifIN0" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/studiocwf-cat-ciri-whitecat-FR61sPFtyp5MnifIN0">via GIPHY</a></p>
+KRUMPLI
+```
+
+## Output
+
+Use output in script
+```
+curl $(terraform output -raw url)
+```
