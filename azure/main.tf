@@ -129,6 +129,10 @@ resource "local_file" "private_key" {
   filename = "${path.module}/training_key.pem"
 }
 
+output "ssh_command" {
+    description = "value of the ssh command"
+    value = "ssh -i ${local_file.private_key.filename} ${azurerm_linux_virtual_machine.web.admin_username}@${azurerm_linux_virtual_machine.web.public_ip_address}"
+}
 
 output "publicip" {
   description = "value of the public ip"
