@@ -1,5 +1,5 @@
 module "webserver" {
-  source = "github.com/lalyos/azure-web-module"
+  source  = "github.com/lalyos/terralufi.git//azure"
     unumber = "u9999999"
     location = "westeurope"
     body = <<-EOF
