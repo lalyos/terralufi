@@ -52,8 +52,39 @@ resource "azurerm_network_interface" "training" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.training.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
+
+resource "azurerm_public_ip" "pip" {
+  name                = "${var.unumber}-pip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_security_group" "webserver" {
+  name                = "tls_webserver"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "tls"
+    priority                   = 100
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "443"
+    destination_address_prefix = azurerm_network_interface.training.private_ip_address
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "main" {
+  network_interface_id      = azurerm_network_interface.training.id
+  network_security_group_id = azurerm_network_security_group.webserver.id
+}
+
 
 resource "tls_private_key" "training" {
   algorithm = "RSA"
@@ -64,11 +95,16 @@ resource "azurerm_linux_virtual_machine" "web" {
   name                = "training-${var.unumber}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  size                = "Standard_F2"
+  size                = "Standard_B2ms"
   admin_username      = "adminuser"
   network_interface_ids = [
     azurerm_network_interface.training.id,
   ]
+
+  tags = {
+    owner = var.owner
+    costcenter = var.costcenter
+  }
 
   admin_ssh_key {
     username   = "adminuser"
@@ -87,3 +123,14 @@ resource "azurerm_linux_virtual_machine" "web" {
     version   = "latest"
   }
 }
+
+
+output "publicip" {
+  description = "value of the public ip"
+  value = azurerm_linux_virtual_machine.web.public_ip_address
+}
+
+# output "key" {
+#   description = "private-key"
+#   value = tls_private_key.training.private_key_pem
+# }
