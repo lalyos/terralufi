@@ -25,6 +25,10 @@ variable "color" {
     default = "gray"
 }
 
+variable "body" {
+  description = "body of the web page"
+  default = "Please use title/color/body tf vars"
+}
 provider "docker" {
   # Configuration options
 }
@@ -38,7 +42,8 @@ resource "docker_container" "web" {
   }
   env = [
     "TITLE=${upper(var.title)} email:${var.email}",
-    "COLOR=${var.color}"
+    "COLOR=${var.color}",
+    "BODY=${var.body}"
   ]
 }
 
@@ -48,6 +53,7 @@ resource "docker_image" "coffee" {
 
 output "port" {
     value = docker_container.web.ports[0].external
+    sensitive = true
 }
 output "url" {
   value = "http://localhost:${var.port}"
