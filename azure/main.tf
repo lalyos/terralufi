@@ -149,6 +149,7 @@ resource "azurerm_linux_virtual_machine" "web" {
   location            = azurerm_resource_group.rg.location
   size                = "Standard_B2ms"
   admin_username      = "adminuser"
+  custom_data = base64encode(data.cloudinit_config.myconfig.rendered)
   network_interface_ids = [
     azurerm_network_interface.training.id,
   ]
