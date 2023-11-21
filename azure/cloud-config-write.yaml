@@ -1,0 +1,4 @@
+write_files:
+- content: |
+    ${content}
+  path: ${path}

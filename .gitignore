@@ -2,3 +2,4 @@ terraform.tfstate*
 terraform.tfvars
 .terraform*
 .vscode
+azure/training_key.pem

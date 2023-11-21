@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terraform Demo Page</title>
+</head>
+<body bgcolor="${color}">
+    <h2>${title}</h2>
+    ${body}
+    <hr
+    <a href="test.html">Test Page</a>
+    Kopiralyt &copy; 2023.
+</body>
+</html>

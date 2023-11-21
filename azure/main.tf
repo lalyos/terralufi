@@ -4,6 +4,58 @@ provider "azurerm" {
 provider "tls" {
 }
 
+provider "cloudinit" {
+}
+
+data "cloudinit_config" "myconfig" {
+  gzip          = false
+  base64_encode = false
+
+  part {
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/cloud-config-pkg.yaml", {
+      packages = yamlencode(var.packages)
+    })
+  }
+
+  part {
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/cloud-config-write.yaml", {
+      content = indent(4, templatefile("${path.module}/index.html.tftmpl", {
+        title = var.title
+        color = var.color
+        body  = var.body
+      }))
+      path = "/var/www/html/index.html"
+    })
+  }
+
+}
+
+
+variable "packages" {
+  description = "apt packages to install on the VM"
+  type        = list(any)
+  default     = ["nginx", "git"]
+}
+
+variable "title" {
+  description = "the h1 header of the index.html page"
+  default     = "Terraform Demo"
+}
+
+variable "color" {
+  description = "the background color of the index.html page"
+  default     = "lightblue"
+  type        = string
+  #  type        = list("blue", "green", "lightblue", "yellow", "orange", "purple", "hotpink", "brown", "white", "cyan", "magenta", "gray", "darkgray", "lightgray", "lime", "olive", "maroon", "navy", "silver", "teal", "fuchsia", "aqua")
+}
+
+variable "body" {
+  description = "the body of the index.html page"
+  default     = "please use title/color/body terraform variables to customize this page"
+
+}
 variable "owner" {
     description = "Owner of the resource"
 }
