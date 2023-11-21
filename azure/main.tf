@@ -75,7 +75,7 @@ resource "azurerm_network_security_group" "webserver" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     source_address_prefix      = "*"
-    destination_port_range     = "443"
+    destination_port_ranges = ["443", "80", "22"]
     destination_address_prefix = azurerm_network_interface.training.private_ip_address
   }
 }
