@@ -124,13 +124,13 @@ resource "azurerm_linux_virtual_machine" "web" {
   }
 }
 
+resource "local_file" "private_key" {
+  content  = tls_private_key.training.private_key_pem
+  filename = "${path.module}/training_key.pem"
+}
+
 
 output "publicip" {
   description = "value of the public ip"
   value = azurerm_linux_virtual_machine.web.public_ip_address
 }
-
-# output "key" {
-#   description = "private-key"
-#   value = tls_private_key.training.private_key_pem
-# }
