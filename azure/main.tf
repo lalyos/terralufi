@@ -65,6 +65,11 @@ variable "costcenter" {
 }
 variable "unumber" {
   description = "Corporate user number"
+  validation {
+    condition = length(var.unumber) == 7 && substr(var.unumber, 0, 1) == "u"
+    error_message = "unumber must start with 'U' followed by 6 digits"
+  
+  }
 }
 
 variable "location" {
